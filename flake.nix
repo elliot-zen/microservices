@@ -2,7 +2,7 @@
   description = "A very basic flake";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-24.11";
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
   };
 
   outputs = {
@@ -27,7 +27,7 @@
       default = pkgs.mkShell {
         name = "Go";
         packages = with pkgs; [
-          go
+          go_1_23
           gopls
           wire
           gotools
