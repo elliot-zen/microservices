@@ -42,7 +42,7 @@ func getTlsCredentials() (credentials.TransportCredentials, error) {
 		return nil, errors.New("failed to append the CA certs;")
 	}
 	return credentials.NewTLS(&tls.Config{
-		ClientAuth:   tls.RequestClientCert,
+		ClientAuth:   tls.RequireAnyClientCert,
 		Certificates: []tls.Certificate{serverCert},
 		ClientCAs:    certPool,
 	}), nil
@@ -56,7 +56,7 @@ func (a Adapter) Run() {
 	if err != nil {
 		log.Fatalf("failed to listen on port %d, error; %v", a.port, err)
 	}
-  logrus.Infof("=> Loading TLS config...")
+	logrus.Infof("=> Loading TLS config...")
 	tlsCrendentials, tlsCrendentialsErr := getTlsCredentials()
 	if tlsCrendentialsErr != nil {
 		log.Fatalf("failed to load TLS config; err: %v ", tlsCrendentialsErr)

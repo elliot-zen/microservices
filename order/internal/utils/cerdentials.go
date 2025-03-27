@@ -25,9 +25,9 @@ func GetTlsCredentials() (credentials.TransportCredentials, error) {
 		return nil, errors.New("failed to append the CA certs;")
 	}
 	return credentials.NewTLS(&tls.Config{
-    ServerName: "localhost",
+    ServerName: "*.foo.top",
 		Certificates: []tls.Certificate{clientCert},
-		ClientCAs:    certPool,
+		RootCAs:    certPool,
 	}), nil
 
 }
