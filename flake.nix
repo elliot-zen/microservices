@@ -33,11 +33,6 @@
           gotools
           grpcurl
         ];
-        # only for development
-        ENV="development";
-        DATA_SOURCE_URL="root:root@tcp(127.0.0.1:3306)/order";
-        APPLICATION_PORT=3000;
-        PAYMENT_SERVICE_URL="";
       };
     });
   };

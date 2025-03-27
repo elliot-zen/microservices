@@ -1,9 +1,5 @@
-github.com/elliot-zen/microservices-proto/golang/order v0.0.3 h1:gS+IPkHd0nF7VELKG7/JI8UVOIiQ/WT9dSudRBkTuHU=
-github.com/elliot-zen/microservices-proto/golang/order v0.0.3/go.mod h1:ubOKxxedBhIMrvXLeDMD7ZmcUIG+/LHcxqe3RLGtdtw=
 github.com/elliot-zen/microservices-proto/golang/order v0.0.4 h1:3BPmgqC/oqTn79ZwI/nHKRFiv9Bz9ty+f1AT26tDerY=
 github.com/elliot-zen/microservices-proto/golang/order v0.0.4/go.mod h1:ubOKxxedBhIMrvXLeDMD7ZmcUIG+/LHcxqe3RLGtdtw=
-github.com/elliot-zen/microservices-proto/golang/payment v0.0.3 h1:uabZmUwTJZ1X5JaoeqyD88fsRMzLiRaiw13j5TWCtNo=
-github.com/elliot-zen/microservices-proto/golang/payment v0.0.3/go.mod h1:7nPmKiaydI+U4+9iJo/JwxtPI4SIbZKTJVGVjo0uDsY=
 github.com/elliot-zen/microservices-proto/golang/payment v0.0.4 h1:5hOTpccQl/LIr/oKJXCxUdzBn1jd64T+XW9O9G/9DdE=
 github.com/elliot-zen/microservices-proto/golang/payment v0.0.4/go.mod h1:0ve0AIu3RseM7eKuIpx9ceFUzUO58DCRUuDmgLxwZKQ=
 github.com/go-logr/logr v1.4.2 h1:6pFjapn8bFcIbiKo3XT4j/BhANplGihG6tvd+8rYgrY=
