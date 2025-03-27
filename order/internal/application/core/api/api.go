@@ -29,17 +29,17 @@ func (a Application) PlaceOrder(order domain.Order) (domain.Order, error) {
 	}
 	paymentErr := a.payment.Charge(&order)
 	if paymentErr != nil {
-		st := status.Convert(paymentErr)
-    var allErrors []string
-    for _, detail := range st.Details() {
-      switch t := detail.(type) {
-      case *errdetails.BadRequest:
-      for _, violation := range t.GetFieldViolations() {
-          allErrors = append(allErrors, violation.Description)
-        }
-      }
-    }
-		fieldErr := &errdetails .BadRequest_FieldViolation{
+		var allErrors []string
+		stat := status.Convert(paymentErr)
+		for _, detail := range stat.Details() {
+			switch errType := detail.(type) {
+			case *errdetails.BadRequest:
+				for _, violation := range errType.GetFieldViolations() {
+					allErrors = append(allErrors, violation.Description)
+				}
+			}
+		}
+		fieldErr := &errdetails.BadRequest_FieldViolation{
 			Field:       "payment",
 			Description: strings.Join(allErrors, "\n"),
 		}

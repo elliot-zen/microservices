@@ -5,6 +5,9 @@ go 1.23.7
 require (
 	github.com/elliot-zen/microservices-proto/golang/order v0.0.4
 	github.com/elliot-zen/microservices-proto/golang/payment v0.0.4
+	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.3.1
+	github.com/sirupsen/logrus v1.9.3
+	github.com/sony/gobreaker v1.0.0
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250324211829-b45e905df463
 	google.golang.org/grpc v1.71.0
 	gorm.io/driver/mysql v1.5.7
