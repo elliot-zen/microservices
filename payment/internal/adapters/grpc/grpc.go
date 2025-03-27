@@ -6,12 +6,14 @@ import (
 
 	"github.com/elliot-zen/microservices-proto/golang/payment"
 	"github.com/elliot-zen/microservices/payment/internal/application/core/domain"
+	"github.com/sirupsen/logrus"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/status"
 )
 
 func (a Adapter) Create(ctx context.Context, request *payment.CreatePaymentRequest) (*payment.CreatePaymentResponse, error) {
 	var validationErrors []*errdetails.BadRequest_FieldViolation
+  logrus.Infof("[Receive_request] %v", request)
 	if request.UserId < 1 {
 		validationErrors = append(validationErrors, &errdetails.BadRequest_FieldViolation{
 			Field:       "user_id",

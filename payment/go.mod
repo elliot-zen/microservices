@@ -4,6 +4,7 @@ go 1.23.7
 
 require (
 	github.com/elliot-zen/microservices-proto/golang/payment v0.0.4
+	github.com/sirupsen/logrus v1.9.3
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250115164207-1a7da9e5054f
 	google.golang.org/grpc v1.71.0
 	gorm.io/driver/mysql v1.5.7

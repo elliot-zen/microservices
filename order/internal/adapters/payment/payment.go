@@ -2,16 +2,17 @@ package payment
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"github.com/elliot-zen/microservices-proto/golang/payment"
 	"github.com/elliot-zen/microservices/order/internal/application/core/domain"
+	"github.com/elliot-zen/microservices/order/internal/utils"
 	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/retry"
 	"github.com/sirupsen/logrus"
 	"github.com/sony/gobreaker"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 type Adapter struct {
@@ -34,10 +35,11 @@ func CircuitBreakerClientInterceptor(cb *gobreaker.CircuitBreaker) grpc.UnaryCli
 func NewAdapter(paymentSerivceURL string) (*Adapter, error) {
 	logrus.Info("=> Initialize payment adapter...")
 	var opts []grpc.DialOption
+	logrus.Info("=> Load payment circuit breaker config....")
 	cb := gobreaker.NewCircuitBreaker(gobreaker.Settings{
 		Name:        "demo",
-		MaxRequests: 3,                // Allowed number of requests for a half-open circuit;
-		Timeout:     60 * time.Second, // Timeout for an open to haf-open transtion;
+		MaxRequests: 3,               // Allowed number of requests for a half-open circuit;
+		Timeout:     3 * time.Second, // Timeout for an open to haf-open transtion;
 		ReadyToTrip: func(counts gobreaker.Counts) bool {
 			// This function decide on if the circuit will be open;
 			failureRatio := float64(counts.TotalFailures) / float64(counts.Requests)
@@ -48,6 +50,11 @@ func NewAdapter(paymentSerivceURL string) (*Adapter, error) {
 			logrus.Warnf("Circuit Breaker: %s, changed from %v to %v", name, from, to)
 		},
 	})
+	logrus.Info("=> Load TLS config....")
+	tlsCredentials, tlsCredentialsErr := utils.GetTlsCredentials()
+	if tlsCredentialsErr != nil {
+		log.Fatalf("failed to load TLS config; err: %v", tlsCredentialsErr)
+	}
 	// Use go-grpc-middleware to apply retry logic to gRPC calls;
 	opts = append(opts,
 		grpc.WithUnaryInterceptor(grpc_retry.UnaryClientInterceptor(
@@ -56,7 +63,7 @@ func NewAdapter(paymentSerivceURL string) (*Adapter, error) {
 			grpc_retry.WithBackoff(grpc_retry.BackoffLinear(time.Second)),
 		)))
 	opts = append(opts, grpc.WithUnaryInterceptor(CircuitBreakerClientInterceptor(cb)))
-	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	opts = append(opts, grpc.WithTransportCredentials(tlsCredentials))
 	conn, err := grpc.NewClient(paymentSerivceURL, opts...)
 	if err != nil {
 		return nil, err
