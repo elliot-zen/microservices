@@ -5,7 +5,6 @@ import (
 
 	"github.com/elliot-zen/microservices/order/internal/application/core/domain"
 	"github.com/elliot-zen/microservices/order/internal/ports"
-	"github.com/sirupsen/logrus"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -32,7 +31,6 @@ func (a Application) PlaceOrder(order domain.Order) (domain.Order, error) {
 	if paymentErr != nil {
 		var allErrors []string
     if status.Code(paymentErr) != codes.InvalidArgument {
-      logrus.Errorf("unexpected error: %v", paymentErr)
       allErrors = append(allErrors, paymentErr.Error())
     }
 		stat := status.Convert(paymentErr)
