@@ -32,6 +32,7 @@
           wire
           gotools
           grpcurl
+          go-mockery
         ];
       };
     });
