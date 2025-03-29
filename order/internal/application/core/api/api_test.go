@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"errors"
 	"testing"
 
@@ -16,11 +17,11 @@ import (
 func Test_Should_Place_Order(t *testing.T) {
 	payment := mocks.NewPaymentPort(t)
 	db := mocks.NewDBPort(t)
-	payment.On("Charge", mock.Anything).Return(nil)
-	db.On("Save", mock.Anything).Return(nil)
+	payment.On("Charge", mock.Anything, mock.Anything).Return(nil)
+	db.On("Save", mock.Anything, mock.Anything).Return(nil)
 
 	application := NewApplication(db, payment)
-	_, err := application.PlaceOrder(domain.Order{
+	_, err := application.PlaceOrder(context.Background(), domain.Order{
 		CustomerID: 123,
 		OrderItems: []domain.OrderItem{
 			{
@@ -37,11 +38,11 @@ func Test_Should_Place_Order(t *testing.T) {
 func Test_Should_Return_Error_When_Db_Persistence_Fail(t *testing.T) {
 	payment := mocks.NewPaymentPort(t)
 	db := mocks.NewDBPort(t)
-	payment.On("Charge", mock.Anything).Return(nil).Maybe()
-	db.On("Save", mock.Anything).Return(errors.New("connection error"))
+	payment.On("Charge", mock.Anything, mock.Anything).Return(nil).Maybe()
+	db.On("Save", mock.Anything, mock.Anything).Return(errors.New("connection error"))
 
 	application := NewApplication(db, payment)
-	_, err := application.PlaceOrder(domain.Order{
+	_, err := application.PlaceOrder(context.Background(), domain.Order{
 		CustomerID: 123,
 		OrderItems: []domain.OrderItem{
 			{
@@ -58,11 +59,11 @@ func Test_Should_Return_Error_When_Db_Persistence_Fail(t *testing.T) {
 func Test_Should_Return_Error_When_Payment_Fail(t *testing.T) {
 	payment := mocks.NewPaymentPort(t)
 	db := mocks.NewDBPort(t)
-	payment.On("Charge", mock.Anything).Return(errors.New("insufficient balance"))
-	db.On("Save", mock.Anything).Return(nil)
+	payment.On("Charge", mock.Anything, mock.Anything).Return(errors.New("insufficient balance"))
+	db.On("Save", mock.Anything, mock.Anything).Return(nil)
 
 	application := NewApplication(db, payment)
-	_, err := application.PlaceOrder(domain.Order{
+	_, err := application.PlaceOrder(context.Background(), domain.Order{
 		CustomerID: 123,
 		OrderItems: []domain.OrderItem{
 			{

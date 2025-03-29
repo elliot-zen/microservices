@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"strings"
 
 	"github.com/elliot-zen/microservices/order/internal/application/core/domain"
@@ -22,8 +23,8 @@ func NewApplication(db ports.DBPort, payment ports.PaymentPort) *Application {
 	}
 }
 
-func (a Application) PlaceOrder(order domain.Order) (domain.Order, error) {
-	err := a.db.Save(&order)
+func (a Application) PlaceOrder(ctx context.Context, order domain.Order) (domain.Order, error) {
+	err := a.db.Save(ctx, &order)
 	if err != nil {
 		return domain.Order{}, err
 	}
@@ -53,4 +54,8 @@ func (a Application) PlaceOrder(order domain.Order) (domain.Order, error) {
 		return domain.Order{}, statusWithDetail.Err()
 	}
 	return order, nil
+}
+
+func (a Application) Get(ctx context.Context, id int64) (domain.Order, error) {
+  return a.db.Get(ctx, id)
 }

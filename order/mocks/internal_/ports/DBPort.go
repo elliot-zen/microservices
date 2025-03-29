@@ -3,6 +3,8 @@
 package mocks
 
 import (
+	context "context"
+
 	domain "github.com/elliot-zen/microservices/order/internal/application/core/domain"
 	mock "github.com/stretchr/testify/mock"
 )
@@ -12,9 +14,9 @@ type DBPort struct {
 	mock.Mock
 }
 
-// Get provides a mock function with given fields: id
-func (_m *DBPort) Get(id string) (domain.Order, error) {
-	ret := _m.Called(id)
+// Get provides a mock function with given fields: ctx, id
+func (_m *DBPort) Get(ctx context.Context, id int64) (domain.Order, error) {
+	ret := _m.Called(ctx, id)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Get")
@@ -22,17 +24,17 @@ func (_m *DBPort) Get(id string) (domain.Order, error) {
 
 	var r0 domain.Order
 	var r1 error
-	if rf, ok := ret.Get(0).(func(string) (domain.Order, error)); ok {
-		return rf(id)
+	if rf, ok := ret.Get(0).(func(context.Context, int64) (domain.Order, error)); ok {
+		return rf(ctx, id)
 	}
-	if rf, ok := ret.Get(0).(func(string) domain.Order); ok {
-		r0 = rf(id)
+	if rf, ok := ret.Get(0).(func(context.Context, int64) domain.Order); ok {
+		r0 = rf(ctx, id)
 	} else {
 		r0 = ret.Get(0).(domain.Order)
 	}
 
-	if rf, ok := ret.Get(1).(func(string) error); ok {
-		r1 = rf(id)
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, id)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -40,17 +42,17 @@ func (_m *DBPort) Get(id string) (domain.Order, error) {
 	return r0, r1
 }
 
-// Save provides a mock function with given fields: _a0
-func (_m *DBPort) Save(_a0 *domain.Order) error {
-	ret := _m.Called(_a0)
+// Save provides a mock function with given fields: ctx, order
+func (_m *DBPort) Save(ctx context.Context, order *domain.Order) error {
+	ret := _m.Called(ctx, order)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Save")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(*domain.Order) error); ok {
-		r0 = rf(_a0)
+	if rf, ok := ret.Get(0).(func(context.Context, *domain.Order) error); ok {
+		r0 = rf(ctx, order)
 	} else {
 		r0 = ret.Error(0)
 	}

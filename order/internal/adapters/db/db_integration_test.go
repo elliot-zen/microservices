@@ -37,11 +37,12 @@ func (o *OrderDatabaseTestSuite) SetupSuite() {
 func (o *OrderDatabaseTestSuite) Test_Should_Save_Order() {
 	adapter, err := NewAdapter(o.DataSourceUrl)
 	o.Nil(err)
-	saveErr := adapter.Save(&domain.Order{})
+	saveErr := adapter.Save(context.Background(), &domain.Order{})
 	o.Nil(saveErr)
 }
 
 func (o *OrderDatabaseTestSuite) Test_Should_Get_Order() {
+  ctx := context.Background()
 	adapter, _ := NewAdapter(o.DataSourceUrl)
 	order := domain.NewOrder(2, []domain.OrderItem{
 		{
@@ -50,8 +51,8 @@ func (o *OrderDatabaseTestSuite) Test_Should_Get_Order() {
 			UnitPrice:   1.32,
 		},
 	})
-	adapter.Save(&order)
-	ord, _ := adapter.Get(order.ID)
+	adapter.Save(ctx, &order)
+	ord, _ := adapter.Get(ctx, order.ID)
 	o.Equal(int64(2), ord.CustomerID)
 }
 

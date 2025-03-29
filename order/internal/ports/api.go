@@ -1,7 +1,12 @@
 package ports
 
-import "github.com/elliot-zen/microservices/order/internal/application/core/domain"
+import (
+	"context"
+
+	"github.com/elliot-zen/microservices/order/internal/application/core/domain"
+)
 
 type APIPort interface {
-	PlaceOrder(order domain.Order) (domain.Order, error)
+	PlaceOrder(ctx context.Context, order domain.Order) (domain.Order, error)
+	Get(ctx context.Context, id int64) (domain.Order, error)
 }
