@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/elliot-zen/microservices/order/internal/application/core/domain"
+	"github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -42,7 +43,7 @@ func NewAdapter(dataSourceUrl string) (*Adapter, error) {
 
 func (a Adapter) Get(ctx context.Context, id int64) (domain.Order, error) {
 	var orderEntity Order
-	res := a.db.WithContext(ctx).First(&orderEntity, id)
+	res := a.db.WithContext(ctx).Preload("OrderItems").First(&orderEntity, id)
 	var orderItems []domain.OrderItem
 	for _, orderItem := range orderEntity.OrderItems {
 		orderItems = append(orderItems, domain.OrderItem{
@@ -51,6 +52,7 @@ func (a Adapter) Get(ctx context.Context, id int64) (domain.Order, error) {
 			Quantity:    orderItem.Quantity,
 		})
 	}
+  logrus.Infof("=> Get order with %d, %+v", id, orderEntity)
 	order := domain.Order{
 		ID:         int64(orderEntity.ID),
 		CustomerID: orderEntity.CustomerID,
@@ -75,6 +77,7 @@ func (a Adapter) Save(ctx context.Context, order *domain.Order) error {
 		Status:     order.Status,
 		OrderItems: orderItems,
 	}
+  logrus.Infof("=> Create model %+v", orderModel)
 	res := a.db.WithContext(ctx).Create(&orderModel)
 	if res.Error == nil {
 		order.ID = int64(orderModel.ID)

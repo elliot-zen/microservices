@@ -31,6 +31,8 @@
           gopls
           wire
           gotools
+          delve
+
           grpcurl
           go-mockery
         ];

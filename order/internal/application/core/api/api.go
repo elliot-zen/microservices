@@ -6,6 +6,7 @@ import (
 
 	"github.com/elliot-zen/microservices/order/internal/application/core/domain"
 	"github.com/elliot-zen/microservices/order/internal/ports"
+	"github.com/sirupsen/logrus"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -24,6 +25,7 @@ func NewApplication(db ports.DBPort, payment ports.PaymentPort) *Application {
 }
 
 func (a Application) PlaceOrder(ctx context.Context, order domain.Order) (domain.Order, error) {
+  logrus.Infof("==> Will create order %+v",order)
 	err := a.db.Save(ctx, &order)
 	if err != nil {
 		return domain.Order{}, err

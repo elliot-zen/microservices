@@ -18,7 +18,6 @@ type OrderDatabaseTestSuite struct {
 
 func (o *OrderDatabaseTestSuite) SetupSuite() {
 	ctx := context.Background()
-
 	mysqlContainer, err := mysql.Run(ctx,
 		"mysql:8.0.36",
 		mysql.WithDatabase("orders"),
@@ -42,7 +41,7 @@ func (o *OrderDatabaseTestSuite) Test_Should_Save_Order() {
 }
 
 func (o *OrderDatabaseTestSuite) Test_Should_Get_Order() {
-  ctx := context.Background()
+	ctx := context.Background()
 	adapter, _ := NewAdapter(o.DataSourceUrl)
 	order := domain.NewOrder(2, []domain.OrderItem{
 		{
@@ -54,6 +53,8 @@ func (o *OrderDatabaseTestSuite) Test_Should_Get_Order() {
 	adapter.Save(ctx, &order)
 	ord, _ := adapter.Get(ctx, order.ID)
 	o.Equal(int64(2), ord.CustomerID)
+	orderItem := ord.OrderItems[0]
+	o.Equal("CAM", orderItem.ProductCode)
 }
 
 func TestOrderDatabaseTestSuite(t *testing.T) {
